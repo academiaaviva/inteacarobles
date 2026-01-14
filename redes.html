@@ -3,79 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Academia Aviva - Redes</title>
+    <title>Panel Academia Aviva</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    
     <style>
-        :root {
-            --bg-ultra-dark: #020617;
-            --electric-blue: #3b82f6;
-            --glass: rgba(15, 23, 42, 0.9);
-            --border-color: #1e293b;
-            --text-main: #f8fafc;
-        }
-
-        body {
-            background-color: var(--bg-ultra-dark);
-            color: var(--text-main);
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0; padding: 20px;
-            background: radial-gradient(circle at top right, #0f172a, #020617);
-            min-height: 100vh;
-        }
-
-        .toolbar {
-            display: flex; gap: 15px; margin-bottom: 20px; align-items: center;
-            background: var(--glass); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);
-        }
-
-        .search-bar {
-            flex-grow: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);
-            background: #0f172a; color: white;
-        }
-
-        .btn {
-            padding: 10px 20px; border-radius: 6px; border: 1px solid var(--electric-blue);
-            background: transparent; color: white; cursor: pointer; font-weight: bold; transition: 0.3s;
-        }
-
-        .btn:hover { background: var(--electric-blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
-
-        .excel-container {
-            background: var(--glass); border-radius: 8px; border: 1px solid var(--border-color);
-            overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
+        :root { --bg: #020617; --blue: #3b82f6; --glass: rgba(15, 23, 42, 0.9); --text: #f8fafc; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; }
+        .toolbar { display: flex; gap: 10px; margin-bottom: 20px; background: var(--glass); padding: 15px; border-radius: 8px; border: 1px solid #1e293b; }
+        .search-bar { flex-grow: 1; padding: 10px; background: #0f172a; border: 1px solid #1e293b; color: white; border-radius: 5px; }
+        .btn { padding: 10px 20px; border: 1px solid var(--blue); background: transparent; color: white; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .btn:hover { background: var(--blue); }
+        .excel-container { background: var(--glass); border: 1px solid #1e293b; border-radius: 8px; overflow: hidden; }
         table { width: 100%; border-collapse: collapse; }
-        th { background: #1e293b; color: var(--electric-blue); padding: 15px; text-align: left; border-bottom: 2px solid var(--electric-blue); }
-        td { padding: 12px 15px; border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); }
-
-        .pagination { margin-top: 20px; display: flex; justify-content: center; gap: 5px; }
-        .page-btn { padding: 5px 12px; border: 1px solid var(--border-color); background: #0f172a; color: white; cursor: pointer; }
-        .page-btn.active { background: var(--electric-blue); }
-
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 1000;
-        }
-
-        .modal-content {
-            background: #0f172a; padding: 30px; border: 1px solid var(--electric-blue); border-radius: 15px; width: 400px;
-        }
-
+        th { background: #1e293b; color: var(--blue); padding: 12px; text-align: left; }
+        td { padding: 10px; border-bottom: 1px solid #1e293b; border-right: 1px solid #1e293b; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: #0f172a; padding: 30px; border: 1px solid var(--blue); border-radius: 12px; width: 350px; }
         .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; margin-bottom: 5px; color: #94a3b8; }
-        .input-group input, .input-group select { width: 100%; padding: 10px; background: #1e293b; border: 1px solid var(--border-color); color: white; }
+        .input-group label { display: block; margin-bottom: 5px; font-size: 0.8rem; color: #94a3b8; }
+        .input-group input, .input-group select { width: 100%; padding: 8px; background: #1e293b; border: 1px solid #334155; color: white; border-radius: 4px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
-    <h2 style="color: var(--electric-blue); letter-spacing: 2px;">PERSONAS INTERESADAS</h2>
+    <h2 style="color: var(--blue); letter-spacing: 2px;">GESTIÓN DE INTERESADOS</h2>
 
     <div class="toolbar">
         <button class="btn" onclick="openAddModal()">+ Añadir Interesado</button>
-        <input type="text" id="searchInput" class="search-bar" placeholder="Buscar por nombre..." onkeyup="filterData()">
+        <input type="text" id="searchInput" class="search-bar" placeholder="Buscar por nombre..." onkeyup="window.filterData()">
         <button class="btn" onclick="openPrintModal()">📄 Imprimir</button>
     </div>
 
@@ -93,43 +48,33 @@
             <tbody id="tableBody"></tbody>
         </table>
     </div>
-    <div id="pagination" class="pagination"></div>
 
     <div id="modalAdd" class="modal">
         <div class="modal-content">
             <h3>Nuevo Registro</h3>
-            <div class="input-group">
-                <label>Nombre</label>
-                <input type="text" id="formNombre">
-            </div>
+            <div class="input-group"><label>Nombre</label><input type="text" id="fNombre"></div>
             <div class="input-group">
                 <label>Red Social</label>
-                <select id="formRed" onchange="checkOther(this.value)">
+                <select id="fRed" onchange="document.getElementById('fOtra').style.display=(this.value=='Otro'?'block':'none')">
                     <option value="Facebook">Facebook</option>
                     <option value="Instagram">Instagram</option>
                     <option value="Otro">Otro</option>
                 </select>
-                <input type="text" id="formOtraApp" placeholder="¿Cuál?" style="display:none; margin-top:10px;">
+                <input type="text" id="fOtra" placeholder="¿Cuál?" style="display:none; margin-top:5px;">
             </div>
-            <div class="input-group">
-                <label>Fecha</label>
-                <input type="date" id="formFecha">
-            </div>
-            <div class="input-group">
-                <label>Teléfono</label>
-                <input type="tel" id="formTel">
-            </div>
-            <button class="btn" style="width:100%" onclick="saveData()">Guardar</button>
-            <button class="btn" style="width:100%; margin-top:10px; border-color:red" onclick="closeModal('modalAdd')">Cancelar</button>
+            <div class="input-group"><label>Fecha</label><input type="date" id="fFecha"></div>
+            <div class="input-group"><label>Teléfono</label><input type="tel" id="fTel"></div>
+            <button class="btn" style="width:100%" id="btnGuardar">Guardar Ahora</button>
+            <button class="btn" style="width:100%; margin-top:10px; border-color:red;" onclick="closeModal('modalAdd')">Cancelar</button>
         </div>
     </div>
 
     <div id="modalPrint" class="modal">
         <div class="modal-content">
-            <h3>Rango de Fechas</h3>
-            <div class="input-group"><label>Inicio</label><input type="date" id="printStart"></div>
-            <div class="input-group"><label>Fin</label><input type="date" id="printEnd"></div>
-            <button class="btn" style="width:100%" onclick="generatePDF()">Descargar PDF</button>
+            <h3>Rango de Impresión</h3>
+            <div class="input-group"><label>Inicio</label><input type="date" id="pStart"></div>
+            <div class="input-group"><label>Fin</label><input type="date" id="pEnd"></div>
+            <button class="btn" style="width:100%" onclick="generatePDF()">Generar PDF</button>
             <button class="btn" style="width:100%; margin-top:10px;" onclick="closeModal('modalPrint')">Cerrar</button>
         </div>
     </div>
@@ -149,103 +94,80 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
         let masterData = [];
-        let filteredData = [];
-        let currentPage = 1;
-        const rowsPerPage = 20;
 
-        // Cargar datos de Firebase
-        async function load() {
+        // Función para cargar datos iniciales
+        async function loadData() {
             const q = query(collection(db, "interesados"), orderBy("fecha", "desc"));
             const snapshot = await getDocs(q);
             masterData = snapshot.docs.map(doc => doc.data());
-            filteredData = [...masterData];
-            render();
+            renderTable(masterData);
         }
 
         // Función para dibujar la tabla
-        window.render = () => {
+        function renderTable(data) {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = "";
-            const start = (currentPage - 1) * rowsPerPage;
-            const pageData = filteredData.slice(start, start + rowsPerPage);
-
-            pageData.forEach(item => {
-                tbody.innerHTML += `<tr>
+            data.forEach(item => {
+                const row = `<tr>
                     <td>${item.nombre}</td>
                     <td>${item.redSocial}</td>
                     <td>${item.otraApp || '-'}</td>
                     <td>${item.fecha}</td>
                     <td>${item.telefono}</td>
                 </tr>`;
+                tbody.innerHTML += row;
             });
-            renderPagination();
-        };
-
-        function renderPagination() {
-            const pag = document.getElementById('pagination');
-            pag.innerHTML = "";
-            const total = Math.ceil(filteredData.length / rowsPerPage);
-            for(let i=1; i<=total; i++) {
-                pag.innerHTML += `<button class="page-btn ${i===currentPage?'active':''}" onclick="setPage(${i})">${i}</button>`;
-            }
         }
 
-        // Exportar funciones al objeto window para que los botones las vean
-        window.setPage = (p) => { currentPage = p; render(); };
-        
-        window.saveData = async () => {
-            const data = {
-                nombre: document.getElementById('formNombre').value,
-                redSocial: document.getElementById('formRed').value,
-                otraApp: document.getElementById('formOtraApp').value,
-                fecha: document.getElementById('formFecha').value,
-                telefono: document.getElementById('formTel').value
+        // GUARDAR DATOS
+        document.getElementById('btnGuardar').onclick = async () => {
+            const nuevo = {
+                nombre: document.getElementById('fNombre').value,
+                redSocial: document.getElementById('fRed').value,
+                otraApp: document.getElementById('fOtra').value,
+                fecha: document.getElementById('fFecha').value,
+                telefono: document.getElementById('fTel').value
             };
-            if(!data.nombre || !data.fecha) return alert("Nombre y fecha obligatorios");
-            await addDoc(collection(db, "interesados"), data);
-            alert("Guardado!");
-            location.reload();
+
+            if(!nuevo.nombre || !nuevo.fecha) return alert("Completa nombre y fecha");
+
+            try {
+                await addDoc(collection(db, "interesados"), nuevo);
+                // Actualizar localmente para que se vea de inmediato
+                masterData.unshift(nuevo);
+                renderTable(masterData);
+                // Limpiar y cerrar
+                document.getElementById('fNombre').value = "";
+                document.getElementById('fTel').value = "";
+                document.getElementById('modalAdd').style.display = 'none';
+                alert("¡Guardado y reflejado en la tabla!");
+            } catch (e) { alert("Error al guardar: " + e); }
         };
 
+        // BUSCADOR
         window.filterData = () => {
             const val = document.getElementById('searchInput').value.toLowerCase();
-            filteredData = masterData.filter(d => d.nombre.toLowerCase().includes(val));
-            currentPage = 1;
-            render();
+            const filtrados = masterData.filter(d => d.nombre.toLowerCase().includes(val));
+            renderTable(filtrados);
         };
 
-        load();
+        loadData();
     </script>
 
     <script>
-        // Funciones de Interfaz (No necesitan Firebase)
         function openAddModal() { 
             document.getElementById('modalAdd').style.display = 'flex'; 
-            document.getElementById('formFecha').valueAsDate = new Date();
+            document.getElementById('fFecha').valueAsDate = new Date();
         }
         function openPrintModal() { document.getElementById('modalPrint').style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        
-        function checkOther(val) {
-            document.getElementById('formOtraApp').style.display = (val === 'Otro') ? 'block' : 'none';
-        }
 
         function generatePDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            const start = document.getElementById('printStart').value;
-            const end = document.getElementById('printEnd').value;
-
-            doc.text("Academia Aviva - Reporte de Interesados", 14, 15);
-            doc.autoTable({ 
-                html: '#mainTable', 
-                startY: 25,
-                didParseCell: function(data) {
-                    // Aquí podrías filtrar por fecha si quisieras que el PDF sea estricto
-                }
-            });
+            doc.text("Reporte de Interesados - Academia Aviva", 14, 15);
+            doc.autoTable({ html: '#mainTable', startY: 25 });
             doc.save('interesados.pdf');
         }
     </script>
