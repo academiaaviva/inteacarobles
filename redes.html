@@ -3,20 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Academia Aviva</title>
+    <title>Panel Academia Aviva - Gestión</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
-        :root { --bg: #020617; --blue: #3b82f6; --glass: rgba(15, 23, 42, 0.9); --text: #f8fafc; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; }
+        :root { 
+            --bg: #020617; --blue: #3b82f6; --glass: rgba(15, 23, 42, 0.9); --text: #f8fafc;
+            --nored: #7f1d1d; --comp: #064e3b; --proc: #78350f;
+        }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; }
+        
+        /* Estilos de Estado para las filas */
+        .status-no-respuesta { background-color: var(--nored) !important; }
+        .status-completado { background-color: var(--comp) !important; }
+        .status-proceso { background-color: var(--proc) !important; }
+        .status-pendiente { background-color: transparent; }
+
         .toolbar { display: flex; gap: 10px; margin-bottom: 20px; background: var(--glass); padding: 15px; border-radius: 8px; border: 1px solid #1e293b; }
         .search-bar { flex-grow: 1; padding: 10px; background: #0f172a; border: 1px solid #1e293b; color: white; border-radius: 5px; }
-        .btn { padding: 10px 20px; border: 1px solid var(--blue); background: transparent; color: white; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        
+        .btn { padding: 8px 15px; border: 1px solid var(--blue); background: transparent; color: white; cursor: pointer; border-radius: 5px; font-weight: bold; font-size: 0.8rem; }
         .btn:hover { background: var(--blue); }
-        .excel-container { background: var(--glass); border: 1px solid #1e293b; border-radius: 8px; overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; }
-        th { background: #1e293b; color: var(--blue); padding: 12px; text-align: left; }
-        td { padding: 10px; border-bottom: 1px solid #1e293b; border-right: 1px solid #1e293b; }
+        .btn-delete { border-color: #ef4444; color: #ef4444; }
+        .btn-delete:hover { background: #ef4444; color: white; }
+
+        .excel-container { background: var(--glass); border: 1px solid #1e293b; border-radius: 8px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        th { background: #1e293b; color: var(--blue); padding: 12px; text-align: left; text-transform: uppercase; font-size: 0.75rem; }
+        td { padding: 10px; border-bottom: 1px solid #334155; border-right: 1px solid #334155; }
+
+        select.status-select { background: #0f172a; color: white; border: 1px solid var(--blue); padding: 5px; border-radius: 4px; }
+
+        /* Modales */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: #0f172a; padding: 30px; border: 1px solid var(--blue); border-radius: 12px; width: 350px; }
         .input-group { margin-bottom: 15px; }
@@ -43,6 +61,8 @@
                     <th>App</th>
                     <th>Fecha</th>
                     <th>Teléfono</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
                 </tr>
             </thead>
             <tbody id="tableBody"></tbody>
@@ -64,7 +84,7 @@
             </div>
             <div class="input-group"><label>Fecha</label><input type="date" id="fFecha"></div>
             <div class="input-group"><label>Teléfono</label><input type="tel" id="fTel"></div>
-            <button class="btn" style="width:100%" id="btnGuardar">Guardar Ahora</button>
+            <button class="btn" style="width:100%" id="btnGuardar">Guardar Registro</button>
             <button class="btn" style="width:100%; margin-top:10px; border-color:red;" onclick="closeModal('modalAdd')">Cancelar</button>
         </div>
     </div>
@@ -81,7 +101,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, updateDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBdR8vDblXMyKceO7vygMryy3bXIV4-PhU",
@@ -96,56 +116,69 @@
         const db = getFirestore(app);
         let masterData = [];
 
-        // Función para cargar datos iniciales
         async function loadData() {
             const q = query(collection(db, "interesados"), orderBy("fecha", "desc"));
             const snapshot = await getDocs(q);
-            masterData = snapshot.docs.map(doc => doc.data());
+            masterData = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
             renderTable(masterData);
         }
 
-        // Función para dibujar la tabla
         function renderTable(data) {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = "";
             data.forEach(item => {
-                const row = `<tr>
+                const statusClass = item.estado ? `status-${item.estado.toLowerCase().replace(/ /g, '-')}` : '';
+                const row = `<tr id="row-${item.id}" class="${statusClass}">
                     <td>${item.nombre}</td>
                     <td>${item.redSocial}</td>
                     <td>${item.otraApp || '-'}</td>
                     <td>${item.fecha}</td>
                     <td>${item.telefono}</td>
+                    <td>
+                        <select class="status-select" onchange="window.updateStatus('${item.id}', this.value)">
+                            <option value="pendiente" ${item.estado=='pendiente'?'selected':''}>Pendiente</option>
+                            <option value="no-respuesta" ${item.estado=='no-respuesta'?'selected':''}>No dio respuesta</option>
+                            <option value="completado" ${item.estado=='completado'?'selected':''}>Completado</option>
+                            <option value="proceso" ${item.estado=='proceso'?'selected':''}>En proceso</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button class="btn btn-delete" onclick="window.deleteItem('${item.id}')">Eliminar</button>
+                    </td>
                 </tr>`;
                 tbody.innerHTML += row;
             });
         }
 
-        // GUARDAR DATOS
+        // FUNCIONES GLOBALES
+        window.updateStatus = async (id, value) => {
+            const docRef = doc(db, "interesados", id);
+            await updateDoc(docRef, { estado: value });
+            loadData(); // Recargar para aplicar colores
+        };
+
+        window.deleteItem = async (id) => {
+            if(confirm("¿Estás seguro de eliminar este interesado?")) {
+                await deleteDoc(doc(db, "interesados", id));
+                loadData();
+            }
+        };
+
         document.getElementById('btnGuardar').onclick = async () => {
             const nuevo = {
                 nombre: document.getElementById('fNombre').value,
                 redSocial: document.getElementById('fRed').value,
                 otraApp: document.getElementById('fOtra').value,
                 fecha: document.getElementById('fFecha').value,
-                telefono: document.getElementById('fTel').value
+                telefono: document.getElementById('fTel').value,
+                estado: 'pendiente'
             };
-
-            if(!nuevo.nombre || !nuevo.fecha) return alert("Completa nombre y fecha");
-
-            try {
-                await addDoc(collection(db, "interesados"), nuevo);
-                // Actualizar localmente para que se vea de inmediato
-                masterData.unshift(nuevo);
-                renderTable(masterData);
-                // Limpiar y cerrar
-                document.getElementById('fNombre').value = "";
-                document.getElementById('fTel').value = "";
-                document.getElementById('modalAdd').style.display = 'none';
-                alert("¡Guardado y reflejado en la tabla!");
-            } catch (e) { alert("Error al guardar: " + e); }
+            if(!nuevo.nombre || !nuevo.fecha) return alert("Nombre y fecha requeridos");
+            await addDoc(collection(db, "interesados"), nuevo);
+            closeModal('modalAdd');
+            loadData();
         };
 
-        // BUSCADOR
         window.filterData = () => {
             const val = document.getElementById('searchInput').value.toLowerCase();
             const filtrados = masterData.filter(d => d.nombre.toLowerCase().includes(val));
@@ -167,8 +200,8 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             doc.text("Reporte de Interesados - Academia Aviva", 14, 15);
-            doc.autoTable({ html: '#mainTable', startY: 25 });
-            doc.save('interesados.pdf');
+            doc.autoTable({ html: '#mainTable', startY: 25, columns: [0,1,2,3,4,5] });
+            doc.save('reporte_academia.pdf');
         }
     </script>
 </body>
