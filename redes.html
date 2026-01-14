@@ -19,153 +19,64 @@
         body {
             background-color: var(--bg-ultra-dark);
             color: var(--text-main);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0; padding: 20px;
             background: radial-gradient(circle at top right, #0f172a, #020617);
             min-height: 100vh;
         }
 
-        h2 {
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--electric-blue);
-            text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-            margin-bottom: 30px;
-        }
-
-        /* --- BARRA DE HERRAMIENTAS --- */
         .toolbar {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            align-items: center;
-            background: var(--glass);
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
+            display: flex; gap: 15px; margin-bottom: 20px; align-items: center;
+            background: var(--glass); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);
         }
 
         .search-bar {
-            flex-grow: 1;
-            padding: 10px 15px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background: #0f172a;
-            color: white;
-            outline: none;
+            flex-grow: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);
+            background: #0f172a; color: white;
         }
-
-        .search-bar:focus { border-color: var(--electric-blue); }
 
         .btn {
-            padding: 10px 20px;
-            border-radius: 6px;
-            border: 1px solid var(--electric-blue);
-            background: transparent;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            padding: 10px 20px; border-radius: 6px; border: 1px solid var(--electric-blue);
+            background: transparent; color: white; cursor: pointer; font-weight: bold; transition: 0.3s;
         }
 
-        .btn:hover {
-            background: var(--electric-blue);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-        }
+        .btn:hover { background: var(--electric-blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
 
-        /* --- TABLA ESTILO EXCEL --- */
         .excel-container {
-            background: var(--glass);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: var(--glass); border-radius: 8px; border: 1px solid var(--border-color);
+            overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #1e293b; color: var(--electric-blue); padding: 15px; text-align: left; border-bottom: 2px solid var(--electric-blue); }
+        td { padding: 12px 15px; border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); }
 
-        th {
-            background: #1e293b;
-            color: var(--electric-blue);
-            text-align: left;
-            padding: 15px;
-            border-bottom: 2px solid var(--electric-blue);
-        }
+        .pagination { margin-top: 20px; display: flex; justify-content: center; gap: 5px; }
+        .page-btn { padding: 5px 12px; border: 1px solid var(--border-color); background: #0f172a; color: white; cursor: pointer; }
+        .page-btn.active { background: var(--electric-blue); }
 
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
-        }
-
-        tr:hover { background: rgba(59, 130, 246, 0.05); }
-
-        /* --- PAGINACIÓN --- */
-        .pagination {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 5px;
-        }
-
-        .page-btn {
-            padding: 5px 12px;
-            border: 1px solid var(--border-color);
-            background: #0f172a;
-            color: white;
-            cursor: pointer;
-        }
-
-        .page-btn.active {
-            background: var(--electric-blue);
-            border-color: var(--electric-blue);
-        }
-
-        /* --- MODALES --- */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(5px);
-            justify-content: center; align-items: center;
-            z-index: 1000;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 1000;
         }
 
         .modal-content {
-            background: #0f172a;
-            padding: 30px;
-            border: 1px solid var(--electric-blue);
-            border-radius: 15px;
-            width: 450px;
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
+            background: #0f172a; padding: 30px; border: 1px solid var(--electric-blue); border-radius: 15px; width: 400px;
         }
 
         .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; margin-bottom: 8px; color: #94a3b8; }
-        .input-group input, .input-group select {
-            width: 100%; padding: 10px; background: #1e293b; border: 1px solid var(--border-color); color: white; border-radius: 5px;
-        }
-
-        #otraAppContainer { display: none; margin-top: 10px; }
+        .input-group label { display: block; margin-bottom: 5px; color: #94a3b8; }
+        .input-group input, .input-group select { width: 100%; padding: 10px; background: #1e293b; border: 1px solid var(--border-color); color: white; }
     </style>
 </head>
 <body>
 
-    <h2>Personas Interesadas - Academia Aviva</h2>
+    <h2 style="color: var(--electric-blue); letter-spacing: 2px;">PERSONAS INTERESADAS</h2>
 
     <div class="toolbar">
-        <button class="btn" onclick="toggleModal('modalAdd', true)">+ Añadir Interesado</button>
+        <button class="btn" onclick="openAddModal()">+ Añadir Interesado</button>
         <input type="text" id="searchInput" class="search-bar" placeholder="Buscar por nombre..." onkeyup="filterData()">
-        <button class="btn" onclick="toggleModal('modalPrint', true)">📄 Imprimir Hoja</button>
+        <button class="btn" onclick="openPrintModal()">📄 Imprimir</button>
     </div>
 
     <div class="excel-container">
@@ -174,24 +85,22 @@
                 <tr>
                     <th>Nombre</th>
                     <th>Red Social</th>
-                    <th>App Específica</th>
+                    <th>App</th>
                     <th>Fecha</th>
                     <th>Teléfono</th>
                 </tr>
             </thead>
-            <tbody id="tableBody">
-                </tbody>
+            <tbody id="tableBody"></tbody>
         </table>
     </div>
-
     <div id="pagination" class="pagination"></div>
 
     <div id="modalAdd" class="modal">
         <div class="modal-content">
-            <h3 style="color: var(--electric-blue)">Nuevo Registro</h3>
+            <h3>Nuevo Registro</h3>
             <div class="input-group">
-                <label>Nombre del Interesado</label>
-                <input type="text" id="formNombre" placeholder="Ej: Juan Pérez">
+                <label>Nombre</label>
+                <input type="text" id="formNombre">
             </div>
             <div class="input-group">
                 <label>Red Social</label>
@@ -200,38 +109,28 @@
                     <option value="Instagram">Instagram</option>
                     <option value="Otro">Otro</option>
                 </select>
-                <div id="otraAppContainer">
-                    <input type="text" id="formOtraApp" placeholder="¿Qué aplicación?">
-                </div>
+                <input type="text" id="formOtraApp" placeholder="¿Cuál?" style="display:none; margin-top:10px;">
             </div>
             <div class="input-group">
                 <label>Fecha</label>
                 <input type="date" id="formFecha">
             </div>
             <div class="input-group">
-                <label>Número de Teléfono</label>
-                <input type="tel" id="formTel" placeholder="Ej: 8888-8888">
+                <label>Teléfono</label>
+                <input type="tel" id="formTel">
             </div>
-            <div style="display:flex; gap:10px; margin-top:25px;">
-                <button class="btn" style="flex:1" onclick="saveInteresado()">Guardar Registro</button>
-                <button class="btn" style="flex:1; border-color:#ef4444;" onclick="toggleModal('modalAdd', false)">Cerrar</button>
-            </div>
+            <button class="btn" style="width:100%" onclick="saveData()">Guardar</button>
+            <button class="btn" style="width:100%; margin-top:10px; border-color:red" onclick="closeModal('modalAdd')">Cancelar</button>
         </div>
     </div>
 
     <div id="modalPrint" class="modal">
         <div class="modal-content">
-            <h3 style="color: var(--electric-blue)">Configurar Impresión</h3>
-            <div class="input-group">
-                <label>Fecha de Inicio</label>
-                <input type="date" id="printStart">
-            </div>
-            <div class="input-group">
-                <label>Fecha Final</label>
-                <input type="date" id="printEnd">
-            </div>
-            <button class="btn" style="width:100%" onclick="exportToPDF()">Generar Hoja para Imprimir</button>
-            <button class="btn" style="width:100%; margin-top:10px; border-color:#ef4444;" onclick="toggleModal('modalPrint', false)">Cancelar</button>
+            <h3>Rango de Fechas</h3>
+            <div class="input-group"><label>Inicio</label><input type="date" id="printStart"></div>
+            <div class="input-group"><label>Fin</label><input type="date" id="printEnd"></div>
+            <button class="btn" style="width:100%" onclick="generatePDF()">Descargar PDF</button>
+            <button class="btn" style="width:100%; margin-top:10px;" onclick="closeModal('modalPrint')">Cerrar</button>
         </div>
     </div>
 
@@ -245,8 +144,7 @@
             projectId: "academia-aviva-nic",
             storageBucket: "academia-aviva-nic.firebasestorage.app",
             messagingSenderId: "387193070830",
-            appId: "1:387193070830:web:405aceb5d6fda212283fff",
-            measurementId: "G-7YN0VSY5NV"
+            appId: "1:387193070830:web:405aceb5d6fda212283fff"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -255,118 +153,100 @@
         let masterData = [];
         let filteredData = [];
         let currentPage = 1;
-        const limit = 20;
+        const rowsPerPage = 20;
 
-        // Cargar datos
-        async function fetchData() {
+        // Cargar datos de Firebase
+        async function load() {
             const q = query(collection(db, "interesados"), orderBy("fecha", "desc"));
             const snapshot = await getDocs(q);
             masterData = snapshot.docs.map(doc => doc.data());
             filteredData = [...masterData];
-            renderTable();
+            render();
         }
 
-        // Guardar datos
-        window.saveInteresado = async () => {
-            const nombre = document.getElementById('formNombre').value;
-            const red = document.getElementById('formRed').value;
-            const otra = document.getElementById('formOtraApp').value;
-            const fecha = document.getElementById('formFecha').value;
-            const tel = document.getElementById('formTel').value;
+        // Función para dibujar la tabla
+        window.render = () => {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = "";
+            const start = (currentPage - 1) * rowsPerPage;
+            const pageData = filteredData.slice(start, start + rowsPerPage);
 
-            if(!nombre || !fecha) return alert("Nombre y Fecha son obligatorios");
-
-            try {
-                await addDoc(collection(db, "interesados"), {
-                    nombre, redSocial: red, otraApp: otra, fecha, telefono: tel
-                });
-                toggleModal('modalAdd', false);
-                location.reload(); // Recarga para ver el nuevo dato
-            } catch(e) { console.error(e); }
-        }
-
-        window.renderTable = () => {
-            const body = document.getElementById('tableBody');
-            body.innerHTML = "";
-            
-            const start = (currentPage - 1) * limit;
-            const end = start + limit;
-            const pageItems = filteredData.slice(start, end);
-
-            pageItems.forEach(item => {
-                body.innerHTML += `
-                    <tr>
-                        <td>${item.nombre}</td>
-                        <td>${item.redSocial}</td>
-                        <td>${item.otraApp || '-'}</td>
-                        <td>${item.fecha}</td>
-                        <td>${item.telefono}</td>
-                    </tr>`;
+            pageData.forEach(item => {
+                tbody.innerHTML += `<tr>
+                    <td>${item.nombre}</td>
+                    <td>${item.redSocial}</td>
+                    <td>${item.otraApp || '-'}</td>
+                    <td>${item.fecha}</td>
+                    <td>${item.telefono}</td>
+                </tr>`;
             });
             renderPagination();
-        }
+        };
 
         function renderPagination() {
-            const container = document.getElementById('pagination');
-            container.innerHTML = "";
-            const totalPages = Math.ceil(filteredData.length / limit);
-            
-            for(let i=1; i<=totalPages; i++) {
-                container.innerHTML += `<button class="page-btn ${i===currentPage?'active':''}" onclick="setPage(${i})">${i}</button>`;
+            const pag = document.getElementById('pagination');
+            pag.innerHTML = "";
+            const total = Math.ceil(filteredData.length / rowsPerPage);
+            for(let i=1; i<=total; i++) {
+                pag.innerHTML += `<button class="page-btn ${i===currentPage?'active':''}" onclick="setPage(${i})">${i}</button>`;
             }
         }
 
-        window.setPage = (p) => { currentPage = p; renderTable(); }
+        // Exportar funciones al objeto window para que los botones las vean
+        window.setPage = (p) => { currentPage = p; render(); };
         
-        window.filterData = () => {
-            const term = document.getElementById('searchInput').value.toLowerCase();
-            filteredData = masterData.filter(d => d.nombre.toLowerCase().includes(term));
-            currentPage = 1;
-            renderTable();
-        }
+        window.saveData = async () => {
+            const data = {
+                nombre: document.getElementById('formNombre').value,
+                redSocial: document.getElementById('formRed').value,
+                otraApp: document.getElementById('formOtraApp').value,
+                fecha: document.getElementById('formFecha').value,
+                telefono: document.getElementById('formTel').value
+            };
+            if(!data.nombre || !data.fecha) return alert("Nombre y fecha obligatorios");
+            await addDoc(collection(db, "interesados"), data);
+            alert("Guardado!");
+            location.reload();
+        };
 
-        // Inicializar
-        document.getElementById('formFecha').valueAsDate = new Date();
-        fetchData();
+        window.filterData = () => {
+            const val = document.getElementById('searchInput').value.toLowerCase();
+            filteredData = masterData.filter(d => d.nombre.toLowerCase().includes(val));
+            currentPage = 1;
+            render();
+        };
+
+        load();
     </script>
 
     <script>
-        function toggleModal(id, show) {
-            document.getElementById(id).style.display = show ? 'flex' : 'none';
+        // Funciones de Interfaz (No necesitan Firebase)
+        function openAddModal() { 
+            document.getElementById('modalAdd').style.display = 'flex'; 
+            document.getElementById('formFecha').valueAsDate = new Date();
         }
-
+        function openPrintModal() { document.getElementById('modalPrint').style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        
         function checkOther(val) {
-            document.getElementById('otraAppContainer').style.display = (val === 'Otro') ? 'block' : 'none';
+            document.getElementById('formOtraApp').style.display = (val === 'Otro') ? 'block' : 'none';
         }
 
-        function exportToPDF() {
+        function generatePDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             const start = document.getElementById('printStart').value;
             const end = document.getElementById('printEnd').value;
 
-            if(!start || !end) return alert("Selecciona ambas fechas");
-
-            // Filtrar solo para el reporte
-            const rows = [];
-            const tableRows = document.querySelectorAll("#tableBody tr");
-            
-            // Nota: Para un reporte real de base de datos se filtraría masterData. 
-            // Aquí usamos los datos visibles por simplicidad de la tabla Excel solicitada.
-            
-            doc.setFontSize(18);
-            doc.text("Reporte de Interesados - Academia Aviva", 14, 20);
-            doc.setFontSize(11);
-            doc.text(`Periodo: ${start} al ${end}`, 14, 30);
-
-            doc.autoTable({
-                html: '#mainTable',
-                startY: 40,
-                theme: 'striped',
-                headStyles: { fillColor: [59, 130, 246] }
+            doc.text("Academia Aviva - Reporte de Interesados", 14, 15);
+            doc.autoTable({ 
+                html: '#mainTable', 
+                startY: 25,
+                didParseCell: function(data) {
+                    // Aquí podrías filtrar por fecha si quisieras que el PDF sea estricto
+                }
             });
-
-            doc.save(`Reporte_Interesados_${start}.pdf`);
+            doc.save('interesados.pdf');
         }
     </script>
 </body>
